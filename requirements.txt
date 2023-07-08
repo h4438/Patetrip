@@ -1,3 +1,5 @@
 google-cloud-aiplatform
 langchain
 python-dotenv
+duckduckgo-search
+
