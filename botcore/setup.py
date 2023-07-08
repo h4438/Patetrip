@@ -18,7 +18,7 @@ def enable_tracing(session:str='test-deploy') -> bool:
     print(f"Enable tracing at {session}")
     return True
 
-def trace_palm2(model_name:str = 'text-bison', max_tokens:int = 128, session:str="test-deploy") -> VertexAI:
+def trace_palm2(model_name:str = 'text-bison', max_tokens:int = 280, session:str="test-deploy") -> VertexAI:
     enable_tracing(session)
     service_json_path = f'{os.path.dirname(__file__)}/../.google/service_account.json'
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = service_json_path

@@ -17,9 +17,9 @@ from langchain import LLMChain
 import sys
 import os
 sys.path.append(f"{os.path.dirname(__file__)}/../..")
-from botcore.utils.prompt_utils import build_prompt
+from botcore.utils import build_prompt
 
-def build_qa_generation_chain(model: BaseLLM):
+def build_qa_generate_chain(model: BaseLLM):
     inputs = ASK_ALLERGEN_CONST['inputs']
     outputs = ASK_ALLERGEN_CONST['outputs']
     template = ASK_ALLERGEN_CONST['template']
