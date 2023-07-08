@@ -8,7 +8,7 @@ from botcore.setup import trace_palm2
 from botcore.utils import parse_nested_json
 
 def sample_use():
-    model = trace_palm2()
+    model = trace_palm2(session='food_search')
     chain = build_qa_generate_chain(model)
     problem = "My legs are hurt and I can't bend them, after I ate goat meat."
     ans = chain({"problem": problem})
