@@ -25,6 +25,15 @@ Install python packages.
 pip install -r requirements.txt
 ```
 
+# How we help users
+
+Most people only know certain food that they are allergic to, but don't relize that the allergens are the real cause.
+So we will based on this information to ask Palm 2 to determine what allergens causing the allergies.
+
+You can look at how this process will be performed from the picture.
+![Checkup process](.doc/doctor_checkup.svg)
+
+
 # Project overall process
 
 The overall process of this project, from the start to the end.
