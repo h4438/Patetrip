@@ -20,7 +20,7 @@ sys.path.append(f"{os.path.dirname(__file__)}/../..")
 from botcore.utils import build_prompt
 from botcore.setup import trace_palm2
 
-def build_qa_generate_chain(session: str = 'qa_gen_pate'):
+def build_qa_allergen_chain(session: str = 'qa_gen_pate'):
     model = trace_palm2(max_tokens=600, session=session)
     inputs = ASK_ALLERGEN_CONST['inputs']
     outputs = ASK_ALLERGEN_CONST['outputs']
