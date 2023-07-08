@@ -31,7 +31,7 @@ Most people only know certain food that they are allergic to, but don't relize t
 So we will based on this information to ask Palm 2 to determine what allergens causing the allergies.
 
 You can look at how this process will be performed from the picture.
-![Checkup process](.doc/doctor_checkup.svg)
+![Checkup process](.doc/doctor_checkup.png)
 
 
 # Project overall process
