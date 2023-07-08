@@ -9,11 +9,15 @@ A safe journey is the best journey.
 # How to run
 
 You'll need a _service account JSON file_ provided by Google Cloud. And do the following cmd.
-
 ```bash
 # At the parent directory
 mkdir .google
 cp <your_service_account>.json ./google/service_account.json
+```
+
+You'll aslo need a _env_ inside .google directory. The _env_ file contains:
+```
+LANGCHAIN=Langchain_plus_api_key
 ```
 
 Install python packages.
