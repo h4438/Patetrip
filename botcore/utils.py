@@ -16,6 +16,13 @@ def load_sample_input():
 
     return questions, answers
 
+def load_example_input():
+    data_1 = {"medical_record": "No chronic diseases or food allergies.",
+            "eating_habit": "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
+            "health_goal": "Weight loss and improving overall cardiovascular health.",
+            "timeline": "2 to 3 months."}
+    return data_1
+
 def parse_nested_json(text: str) -> Dict:
     a = text.strip()
     json_data = a.strip().replace('```json', '').strip()
@@ -45,6 +52,9 @@ class QAMemory():
     def __init__(self, input_key: str = 'problem'):
         self.memory = ConversationBufferMemory(memory_key="chat_history", input_key=input_key)
     
+    def get(self):
+        return self.memory
+
     def load_qa(self, questions: List[str], answers: List[str]):
         self.memory.chat_memory.add_ai_message("Hello! I am a nutrition doctor who can help achiving health goals effectively.")
         self.memory.chat_memory.add_user_message("Hello doctor, I need your help.")
