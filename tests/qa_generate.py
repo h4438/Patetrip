@@ -1,7 +1,6 @@
 import sys
 import os
 from pprint import pprint as ppt
-
 sys.path.append(f"{os.path.dirname(__file__)}/../")
 from botcore.chains.qa_allergen import build_qa_allergen_chain
 from botcore.setup import trace_palm2
@@ -15,6 +14,5 @@ def sample_use():
     ppt(data)
     
 if __name__ == '__main__':
-
     sample_use()
 
