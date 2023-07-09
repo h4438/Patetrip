@@ -48,7 +48,8 @@ class QAMemory():
     
     def load_product_context(self, problem: str):
         symptomp = problem.strip() 
-        self.memory.chat_memory.add_user_message(symptomp)
+        message = f"I having a problem. {symptomp}."
+        self.memory.chat_memory.add_user_message(message)
 
 
 
