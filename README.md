@@ -39,3 +39,9 @@ You can look at how this process will be performed from the picture.
 The overall process of this project, from the start to the end.
 
 ![Overall process](./doc/pate_travel.png)
+
+
+# References
+
+!(What cause food allergy)[https://www.youtube.com/watch?v=CnxzZXjbddk&list=LL&index=3]
+!(How food allergists treat patients)[https://atlantaallergydoctor.com/blog/what-is-a-food-allergy-doctor/]
