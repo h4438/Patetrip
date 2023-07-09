@@ -4,6 +4,15 @@ import json
 from typing import List, Dict
 from langchain.memory import ConversationBufferMemory
 
+
+def load_sample_input():
+    data_1 = {"medical_record": "No chronic diseases or food allergies.",
+            "eating_habit": "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
+            "health_goal": "Weight loss and improving overall cardiovascular health.",
+            "timeline": "2 to 3 months."}
+
+    return data_1
+
 def parse_nested_json(text: str) -> Dict:
     a = text.strip()
     json_data = a.strip().replace('```json', '').strip()
