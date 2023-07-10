@@ -18,6 +18,20 @@ def parse_nested_json(text: str) -> Dict:
     data = json.loads(json_data)
     return data
 
+def parse_workout_list(list_str: str):
+    result = []
+    plans = list_str.strip().split("#")
+    for plan in plans:
+        data = {}
+        if len(plan) < 1:
+            continue
+        content = plan.strip().split('\n')
+        data['exercise'] = content[1].replace("EXERCISE: ",'').replace(" ",'').split(",")
+        data['description'] = content[2].replace("DESC: ", '').strip()
+        data['heading'] = content[3].replace("TARGET: ", '').strip()
+        result.append(data)
+    return result
+
 def parse_nutri_list(list_str: str):
     result = []
     plans = list_str.strip().split("#")
