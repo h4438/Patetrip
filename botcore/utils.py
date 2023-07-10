@@ -27,8 +27,8 @@ def parse_workout_list(list_str: str):
             continue
         content = plan.strip().split('\n')
         data['exercise'] = content[1].replace("EXERCISE: ",'').replace(" ",'').split(",")
-        data['description'] = content[2].replace("DESC: ", '').strip()
-        data['heading'] = content[3].replace("TARGET: ", '').strip()
+        data['work_desc'] = content[2].replace("DESC: ", '').strip()
+        data['work_heading'] = content[3].replace("TARGET: ", '').strip()
         result.append(data)
     return result
 
@@ -41,8 +41,8 @@ def parse_nutri_list(list_str: str):
             continue
         content = plan.strip().split('\n')
         data['food'] = content[1].replace("FOOD: ",'').replace(" ",'').split(",")
-        data['description'] = content[2].replace("DESC: ", '').strip()
-        data['heading'] = content[3].replace("TARGET: ", '').strip()
+        data['nutri_desc'] = content[2].replace("DESC: ", '').strip()
+        data['nutri_heading'] = content[3].replace("TARGET: ", '').strip()
         result.append(data)
     return result
 

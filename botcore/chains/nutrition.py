@@ -34,7 +34,7 @@ import sys
 import os
 sys.path.append(f"{os.path.dirname(__file__)}/../..")
 
-def build_food_suggest_chain(model, debug = True):
+def build_nutri_suggest_chain(model, debug = True):
     inputs = FOOD_SUGGEST_CONST['inputs']
     template = FOOD_SUGGEST_CONST['template']
     prompt = PromptTemplate(input_variables=inputs, template=template)
