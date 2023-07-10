@@ -10,6 +10,11 @@ import vertexai
 from vertexai.preview.language_models import ChatModel, InputOutputTextPair
 from streamlit_extras.colored_header import colored_header
 
+from botcore.setup import trace_palm2
+
+
+from botcore.bot.food_doctor import BotFoodDoctor
+from botcore.utils import load_example_input
 
 st.set_page_config(page_title="Pate Health AI", layout="wide",
                    initial_sidebar_state="collapsed")
@@ -170,6 +175,13 @@ if selected_options == "📝Analytics":
             with dataColumns_submit[0]:
                 if st.form_submit_button('Confirm Responses'):
                     st.session_state.button = True
+    model = trace_palm2()
+    input_note = load_example_input()
+    doctor = BotFoodDoctor(model)
+    doctor.load_note(input_note)
+
+    data = doctor.checkup()
+    st.write(data)
 
     if st.session_state.button == True:
         st.write(st.session_state.list_answer)
@@ -179,8 +191,7 @@ if selected_options == "📝Analytics":
 
 
 
-from botcore.setup import trace_palm2
-import urllib.request
+
 
 # Constants
 
