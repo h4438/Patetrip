@@ -4,18 +4,6 @@ import json
 from typing import List, Dict
 from langchain.memory import ConversationBufferMemory
 
-
-def load_sample_input():
-    answers = ["No chronic diseases or food allergies.",
-             "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
-            "Weight loss and improving overall cardiovascular health.",
-           "2 to 3 months."]
-    
-    questions = ["Can you share with me your history medical record?", "Can you tell me about your eating habits?",
-            "What are your health goals?", "What is your timeline for achieving your goals?"]
-
-    return questions, answers
-
 def load_example_input():
     data_1 = {"medical_record": "No chronic diseases or food allergies.",
             "eating_habit": "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
