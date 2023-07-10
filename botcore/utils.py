@@ -48,13 +48,14 @@ def build_prompt(inputs:list, outputs:dict, template:str, include_parser: bool =
 
 class CheckupMemory():
 
-    def __init__(self, input_key):
+    def __init__(self, input_key, role):
         self.memory = ConversationBufferMemory(memory_key="chat_history", input_key=input_key)
+        self.role = role
 
     def load_conversation(self, ingredient_str: str, day_number: int):
         self.memory.chat_memory.messages.pop()
         if day_number < 2:
-            self.memory.chat_memory.add_ai_message(f"Welcome to day {day_number}! I am a nutrition doctor who can help achiving health goals effectively.")
+            self.memory.chat_memory.add_ai_message(f"Welcome to day {day_number}! I am a {self.role} who can help achiving health goals effectively.")
         else:
             self.memory.chat_memory.add_ai_message(f"Welcome to day {day_number}!")
         self.memory.chat_memory.add_ai_message(f"Here is my advise. {ingredient_str}.")
