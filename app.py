@@ -12,17 +12,18 @@ from streamlit_extras.colored_header import colored_header
 
 
 import dateutil.relativedelta as relativedelta
-from botcore.bot.health_bot import HealthBot
+#from botcore.bot.health_bot import HealthBot
 from botcore.setup import trace_palm2
 
+from botcore.bot.heal_bot import HealthBot
 
 from botcore.bot.food_doctor import BotFoodDoctor
 from botcore.utils import load_example_input
-
+from pprint import pprint as ppt
 
 
 import openai
-openai.api_key = "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"
+openai.api_key = ""
 
 st.set_page_config(page_title="Pate Health AI", layout="wide",
                    initial_sidebar_state="collapsed")
@@ -77,15 +78,12 @@ def hide_hamburger():
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
-def show_time_line(headline,text,month):
-
-    
+def show_time_line(headline,text,month, ans_lists ):
     with open('example.json', "r") as f:
             data = f.read()
     parsed_data = json.loads(data)
+    new_list = []
     if month == 1:
-
-       
     
         heading1 =  headline.split(".")
         
@@ -124,41 +122,43 @@ def show_time_line(headline,text,month):
         json_string = json.dumps(parsed_data)
         timeline(json_string, height=800)
 
-    if month > 1:
-        new_list = []
-        for number in range(month):
-            heading , text = model()
+    if month > 1:        
+        date = datetime.now().strftime('%m')
+        count = int(date)+1
+        
+    
+
+        for number in ans_lists:
+            heading , text = number['nutri_desc'], number['work_desc']
             
-            headline = heading['reason']
-            text = text['description']
             
-            heading1 =  headline.split(".")
+            heading1 =  heading.split(".")
             sentences = text.split(".")
             first_sentence = sentences[0].strip()
-            
+        
             response = openai.Image.create(
-            prompt=str(first_sentence),
+            prompt=str(heading1[0].strip()),
             n=1,
             size="256x256"
             )
             image_url = response['data'][0]['url']
-                
-            
         
+
             format_dicts = {
                 "media": {
                 "url": f"{image_url}",
-                "caption": """["Walking", "Squats", "Push-ups", "Plank"]"""
+                "caption": str(number['work_heading'])
                 },
                 "start_date": {
                 "year": "2023",
-                "month": str(int(datetime.now().strftime('%m'))+number),
+                "month": str(count),
                 },
                 "text": {
                 "headline": f"{heading1[0].strip()}",
-                "text": f"{headline + text}"
+                "text": f"{heading + text}"
                 }
             }
+            count += 1
             new_list.append(format_dicts)
             
         parsed_data['events'] = new_list
@@ -199,6 +199,15 @@ def model():
     return nutri , work
 
 
+def model_months():
+    model=trace_palm2(max_tokens=1000)
+    bot = HealthBot(model, debug=True)
+    input_data = load_example_input()
+    ans = bot.checkup(input_data)
+    return ans
+
+
+ans_lists = ""
 
 if selected_options == "📝Analytics":
     with st.expander("See how it work?"):
@@ -254,18 +263,16 @@ if selected_options == "📝Analytics":
             st.write(text)
             
             show_time_line(heading['reason'], text['description'],month=1)
+        if selected == "3 month":   
+            with st.spinner(text="In progress 3 months"):
+                ans_lists = model_months()
+                st.write(ans_lists)
+            hi = ""
             
-        if selected == "2 month":   
-            with st.spinner(text="In progress 2 months"):
-                show_time_line("", "",month=2)
+            show_time_line("","", month=3,ans_lists=ans_lists)
             
         
         
-
-
-
-# Constants
-
 
 INITIAL_MESSAGE = [
     {"role": "user", "content": "Hi!"},
