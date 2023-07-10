@@ -16,6 +16,11 @@ from botcore.setup import trace_palm2
 from botcore.bot.food_doctor import BotFoodDoctor
 from botcore.utils import load_example_input
 
+
+
+import openai
+openai.api_key = "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"
+
 st.set_page_config(page_title="Pate Health AI", layout="wide",
                    initial_sidebar_state="collapsed")
 from format_message import *
@@ -74,8 +79,8 @@ def show_time_line():
     video = ""
     
     
-    headline = ""
-    text = "CHAPTER II: The subject matter of linguistics comprises all manifestations of human speech, whether that of savages or civilized nations, or of archaic, classical or decadent periods. In each period the linguist must consider not only correct speech and flowery language, but all other forms of expression as well. And that is not all: since he is often unable to observe speech directly, he must consider written texts, for only through them can he reach idioms that are remote in time or space.</p><br/"
+    headline = "week 1"
+    text = "Walking is a great way to get some exercise and improve your cardiovascular health. It's also a low-impact activity, so it's suitable for people of all fitness levels.", "Squats are a great way to strengthen your legs and glutes. They're also a compound exercise, which means they work multiple muscle groups at once.", "Push-ups are a great way to build upper body strength. They're also a bodyweight exercise, so you don't need any equipment to do them.", "The plank is a great way to strengthen your core muscles. It's also a static exercise, which means it doesn't require any movement."
 
     # date time 
     day = ""
@@ -83,12 +88,19 @@ def show_time_line():
     year = ""
     
     
-    
+    # response = openai.Image.create(
+    # prompt="Walking is a great way to get some exercise and improve your cardiovascular health",
+    # n=1,
+    # size="256x256"
+    # )
+    # image_url = response['data'][0]['url']
+    # st.write(image_url)
+
     
     format_dicts = {
         "media": {
           "url": f"{image}",
-          "caption": ""
+          "caption": """["Walking", "Squats", "Push-ups", "Plank"]"""
         },
         "start_date": {
           "year": "2020",
@@ -97,7 +109,7 @@ def show_time_line():
         },
         "text": {
           "headline": f"{headline}",
-          "text": f"<br/><p>{text}"
+          "text": f"{text}"
         }
       }
     
@@ -175,14 +187,7 @@ if selected_options == "📝Analytics":
             with dataColumns_submit[0]:
                 if st.form_submit_button('Confirm Responses'):
                     st.session_state.button = True
-    model = trace_palm2()
-    input_note = load_example_input()
-    doctor = BotFoodDoctor(model)
-    doctor.load_note(input_note)
-
-    data = doctor.checkup()
-    st.write(data)
-
+    
     if st.session_state.button == True:
         st.write(st.session_state.list_answer)
 
