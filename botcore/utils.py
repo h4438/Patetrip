@@ -4,18 +4,6 @@ import json
 from typing import List, Dict
 from langchain.memory import ConversationBufferMemory
 
-
-def load_sample_input():
-    answers = ["No chronic diseases or food allergies.",
-             "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
-            "Weight loss and improving overall cardiovascular health.",
-           "2 to 3 months."]
-    
-    questions = ["Can you share with me your history medical record?", "Can you tell me about your eating habits?",
-            "What are your health goals?", "What is your timeline for achieving your goals?"]
-
-    return questions, answers
-
 def load_example_input():
     data_1 = {"medical_record": "No chronic diseases or food allergies.",
             "eating_habit": "Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen",
@@ -30,6 +18,33 @@ def parse_nested_json(text: str) -> Dict:
     data = json.loads(json_data)
     return data
 
+def parse_workout_list(list_str: str):
+    result = []
+    plans = list_str.strip().split("#")
+    for plan in plans:
+        data = {}
+        if len(plan) < 1:
+            continue
+        content = plan.strip().split('\n')
+        data['exercise'] = content[1].replace("EXERCISE: ",'').replace(" ",'').split(",")
+        data['work_desc'] = content[2].replace("DESC: ", '').strip()
+        data['work_heading'] = content[3].replace("TARGET: ", '').strip()
+        result.append(data)
+    return result
+
+def parse_nutri_list(list_str: str):
+    result = []
+    plans = list_str.strip().split("#")
+    for plan in plans:
+        data = {}
+        if len(plan) < 1:
+            continue
+        content = plan.strip().split('\n')
+        data['food'] = content[1].replace("FOOD: ",'').replace(" ",'').split(",")
+        data['nutri_desc'] = content[2].replace("DESC: ", '').strip()
+        data['nutri_heading'] = content[3].replace("TARGET: ", '').strip()
+        result.append(data)
+    return result
 
 def build_prompt(inputs:list, outputs:dict, template:str, include_parser: bool = True) -> PromptTemplate:
     response_schema = [ResponseSchema(name=k, description=outputs[k])\
