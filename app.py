@@ -1,7 +1,7 @@
 import json
 import streamlit as st
 from streamlit_timeline import timeline
-from datetime import datetime
+from datetime import datetime, timedelta
 from streamlit_pills import pills
 from streamlit_option_menu import option_menu
 from streamlit_chat import message
@@ -10,6 +10,9 @@ import vertexai
 from vertexai.preview.language_models import ChatModel, InputOutputTextPair
 from streamlit_extras.colored_header import colored_header
 
+
+import dateutil.relativedelta as relativedelta
+from botcore.bot.health_bot import HealthBot
 from botcore.setup import trace_palm2
 
 
@@ -45,6 +48,13 @@ if "timeline" not in st.session_state:
 
 if "button" not in st.session_state:
     st.session_state.button = False
+    
+
+if "datasets" not in st.session_state:
+    st.session_state.datasets = []
+
+    
+    
 
 
 def hide_hamburger():
@@ -67,63 +77,98 @@ def hide_hamburger():
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
-def show_time_line():
+def show_time_line(headline,text,month):
 
+    
     with open('example.json', "r") as f:
-        data = f.read()
+            data = f.read()
     parsed_data = json.loads(data)
+    if month == 1:
 
-
-    # test case 
-    image = ""
-    video = ""
+       
     
-    
-    headline = "week 1"
-    text = "Walking is a great way to get some exercise and improve your cardiovascular health. It's also a low-impact activity, so it's suitable for people of all fitness levels.", "Squats are a great way to strengthen your legs and glutes. They're also a compound exercise, which means they work multiple muscle groups at once.", "Push-ups are a great way to build upper body strength. They're also a bodyweight exercise, so you don't need any equipment to do them.", "The plank is a great way to strengthen your core muscles. It's also a static exercise, which means it doesn't require any movement."
-
-    # date time 
-    day = ""
-    month = ""
-    year = ""
-    
-    
-    # response = openai.Image.create(
-    # prompt="Walking is a great way to get some exercise and improve your cardiovascular health",
-    # n=1,
-    # size="256x256"
-    # )
-    # image_url = response['data'][0]['url']
-    # st.write(image_url)
-
-    
-    format_dicts = {
-        "media": {
-          "url": f"{image}",
-          "caption": """["Walking", "Squats", "Push-ups", "Plank"]"""
-        },
-        "start_date": {
-          "year": "2020",
-           "month": "7",
-           "day": "20"
-        },
-        "text": {
-          "headline": f"{headline}",
-          "text": f"{text}"
+        heading1 =  headline.split(".")
+        
+        sentences = text.split(".")
+        first_sentence = sentences[0].strip()
+        
+        
+        
+        response = openai.Image.create(
+        prompt=str(first_sentence),
+        n=1,
+        size="256x256"
+        )
+        image_url = response['data'][0]['url']
+        
+        st.write(str(text))
+        
+        format_dicts = {
+            "media": {
+            "url": f"{image_url}",
+            "caption": """["Walking", "Squats", "Push-ups", "Plank"]"""
+            },
+            "start_date": {
+            "year": "2023",
+            "month": str(int(datetime.now().strftime('%m'))+1),
+            },
+            "text": {
+            "headline": f"{heading1[0].strip()}",
+            "text": f"{headline + text}"
+            }
         }
-      }
-    
-    
+        
+        new_list = [format_dicts]
+        parsed_data['events'] = new_list
 
-    new_list = [format_dicts]
-    parsed_data['events'] = new_list
+        json_string = json.dumps(parsed_data)
+        timeline(json_string, height=800)
 
-    json_string = json.dumps(parsed_data)
-    timeline(json_string, height=800)
+    if month > 1:
+        new_list = []
+        for number in range(month):
+            heading , text = model()
+            
+            headline = heading['reason']
+            text = text['description']
+            
+            heading1 =  headline.split(".")
+            sentences = text.split(".")
+            first_sentence = sentences[0].strip()
+            
+            response = openai.Image.create(
+            prompt=str(first_sentence),
+            n=1,
+            size="256x256"
+            )
+            image_url = response['data'][0]['url']
+                
+            
+        
+            format_dicts = {
+                "media": {
+                "url": f"{image_url}",
+                "caption": """["Walking", "Squats", "Push-ups", "Plank"]"""
+                },
+                "start_date": {
+                "year": "2023",
+                "month": str(int(datetime.now().strftime('%m'))+number),
+                },
+                "text": {
+                "headline": f"{heading1[0].strip()}",
+                "text": f"{headline + text}"
+                }
+            }
+            new_list.append(format_dicts)
+            
+        parsed_data['events'] = new_list
+        json_string = json.dumps(parsed_data)
+        timeline(json_string, height=800)    
+        
 
 
-# hide_hamburger()
 
+hide_hamburger()
 st.markdown("<h1 style='text-align: center; color: red;'>Pate Health</h1>",
             unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'> transform the way you approach your health and nutrition journey</p>",
@@ -143,6 +188,18 @@ selected_options = option_menu(None, ["📝Analytics",  "💬chat Bot"],
 )
 
 
+def model():
+    model = trace_palm2()
+    bot = HealthBot(model, debug=True)
+
+    data = load_example_input()
+    # load user input
+    bot.load_note(data)
+    nutri, work = bot.full_checkup()
+    return nutri , work
+
+
+
 if selected_options == "📝Analytics":
     with st.expander("See how it work?"):
         with st.form(key='my_form'):
@@ -150,14 +207,14 @@ if selected_options == "📝Analytics":
 
             with dataColumns[0]:
                 st.session_state.med_his = st.text_input(
-                    'Medical history', key='la1')
+                    'Medical history', key='la1', placeholder="No chronic diseases or food allergies.")
                 if st.session_state.med_his:
                     st.session_state.list_answer['Medical history'] = st.session_state.med_his
-                st.session_state.target = st.text_area("Your target")
+                st.session_state.target = st.text_area("Your target",placeholder="Weight loss and improving overall cardiovascular health.")
 
             with dataColumns[1]:
                 st.session_state.Foodlike = st.text_input(
-                    'Food interested', key='la2')
+                    'Food interested', key='la2', placeholder="Likes fast food and quick-prep meals but wants to switch to a healthier eating regimen")
 
                 css = '''
                 <style>
@@ -176,7 +233,7 @@ if selected_options == "📝Analytics":
                     "When\'s timeline?",
                     datetime.now())
                 selected = pills("You can chooose this plans", [
-                                 "1 month ", "2 month", "3 month"])
+                                 "1 month", "2 month", "3 month"])
 
                 if st.session_state.Foodlike:
                     st.session_state.list_answer['Food interested'] = st.session_state.Foodlike
@@ -190,11 +247,20 @@ if selected_options == "📝Analytics":
     
     if st.session_state.button == True:
         st.write(st.session_state.list_answer)
-
-        show_time_line()
-
-
-
+        if selected == "1 month":
+            with st.spinner('Wait for it...'):
+                heading , text = model()
+            st.write(heading)
+            st.write(text)
+            
+            show_time_line(heading['reason'], text['description'])
+            
+        if selected == "2 month":   
+            with st.spinner(text="In progress 2 months"):
+                show_time_line("", "",month=2)
+            
+        
+        
 
 
 
@@ -268,10 +334,6 @@ if selected_options == "💬chat Bot":
     with input_container:
         user_input = get_text()
 
-    # Response output
-    ## Function for taking user prompt as input followed by producing AI generated responses
-
-    ## Conditional display of AI generated responses as a function of user provided prompts
     with response_container:
         if user_input:
             response = model_palm2(user_input)
