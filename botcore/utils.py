@@ -30,6 +30,19 @@ def parse_nested_json(text: str) -> Dict:
     data = json.loads(json_data)
     return data
 
+def parse_nutri_list(list_str: str):
+    result = []
+    plans = list_str.strip().split("#")
+    for plan in plans:
+        data = {}
+        if len(plan) < 1:
+            continue
+        content = plan.strip().split('\n')
+        data['food'] = content[1].replace("FOOD: ",'').replace(" ",'').split(",")
+        data['description'] = content[2].replace("DESC: ", '').strip()
+        data['heading'] = content[3].replace("TARGET: ", '').strip()
+        result.append(data)
+    return result
 
 def build_prompt(inputs:list, outputs:dict, template:str, include_parser: bool = True) -> PromptTemplate:
     response_schema = [ResponseSchema(name=k, description=outputs[k])\
