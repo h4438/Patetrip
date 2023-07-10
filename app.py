@@ -253,7 +253,7 @@ if selected_options == "📝Analytics":
             st.write(heading)
             st.write(text)
             
-            show_time_line(heading['reason'], text['description'])
+            show_time_line(heading['reason'], text['description'],month=1)
             
         if selected == "2 month":   
             with st.spinner(text="In progress 2 months"):
