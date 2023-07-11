@@ -43,5 +43,5 @@ The overall process of this project, from the start to the end.
 
 # References
 
-!(What cause food allergy)[https://www.youtube.com/watch?v=CnxzZXjbddk&list=LL&index=3]
-!(How food allergists treat patients)[https://atlantaallergydoctor.com/blog/what-is-a-food-allergy-doctor/]
+- ![What cause food allergy](https://www.youtube.com/watch?v=CnxzZXjbddk&list=LL&index=3)
+- ![How food allergists tret patients](https://atlantaallergydoctor.com/blog/what-is-a-food-allergy-doctor/)
